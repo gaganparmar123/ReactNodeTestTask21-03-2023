@@ -1,6 +1,6 @@
 "use client";
 
-import { getDatasets } from "@/services/Dataset.service";
+import { getDatasets, getProductDatasets } from "@/services/Dataset.service";
 import React, { useEffect, useState } from "react";
 import {
   LineChart,
@@ -15,13 +15,12 @@ import {
   Rectangle,
   BarChart,
 } from "recharts";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import TableLayout from "../../components/TableLayout";
 
 export default function DataInsights() {
   const router = useRouter();
-  const pathname = useSearchParams();
+  const params = useParams();
   const [datasetList, setDatasetList] = useState([]);
   const data = [
     { name: "1990", uv: 400, pv: 200, amt: 2400 },
@@ -79,73 +78,82 @@ export default function DataInsights() {
       amt: 2100,
     },
   ];
+
+  useEffect(() => {
+    getProductDatasets("/product", {
+      params: {
+        parent: params?.id,
+      },
+    })
+      .then((res) => {
+        setDatasetList(res);
+      })
+      .catch((err) => console.log("err", err));
+  }, []);
   return (
-    console.log("router.query.slug1:", pathname.get("id")),
-    (
-      <div className="flex min-h-screen flex-col items-center p-24 py-10">
-        <div className="flex justify-between w-full items-center">
-          <h1 className="font-bold text-2xl">Fashion</h1>
-          <button
-            className="w-40 h-10 bg-stone-500 rounded-xl text-white"
-            onClick={() => router.push("/")}
-          >
-            Go back
-          </button>
-        </div>
-        <TableLayout />
-        <div className="flex flex-col w-full items-center justify-center min-h-screen mt-10">
-          <h1 className="text-4xl mb-5">Data Insights 01</h1>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart
-              data={data}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="pv" stroke="#8884d8" />
-              <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-            </LineChart>
-          </ResponsiveContainer>
-          <h1 className="text-4xl mt-10 mb-5">Data Insights 02</h1>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart
-              width={500}
-              height={300}
-              data={data1}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar
-                dataKey="pv"
-                fill="#8884d8"
-                activeBar={<Rectangle fill="pink" stroke="blue" />}
-              />
-              <Bar
-                dataKey="uv"
-                fill="#82ca9d"
-                activeBar={<Rectangle fill="gold" stroke="purple" />}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+    <div className="flex min-h-screen flex-col items-center p-24 py-10">
+      <div className="flex justify-between w-full items-center">
+        <h1 className="font-bold text-2xl">Fashion</h1>
+        <button
+          className="w-40 h-10 bg-stone-500 rounded-xl text-white"
+          onClick={() => router.push("/")}
+        >
+          Go back
+        </button>
       </div>
-    )
+      <TableLayout />
+      <div className="flex flex-col w-full items-center justify-center min-h-screen mt-10">
+        <h1 className="text-4xl mb-5">Data Insights 01</h1>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart
+            data={data}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="pv" stroke="#8884d8" />
+            <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+          </LineChart>
+        </ResponsiveContainer>
+        <h1 className="text-4xl mt-10 mb-5">Data Insights 02</h1>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart
+            width={500}
+            height={300}
+            data={data1}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar
+              dataKey="pv"
+              fill="#8884d8"
+              activeBar={<Rectangle fill="pink" stroke="blue" />}
+            />
+            <Bar
+              dataKey="uv"
+              fill="#82ca9d"
+              activeBar={<Rectangle fill="gold" stroke="purple" />}
+            />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
   );
 }
