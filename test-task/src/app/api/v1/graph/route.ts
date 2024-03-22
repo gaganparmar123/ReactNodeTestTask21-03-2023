@@ -4,12 +4,24 @@ import { NextRequest, NextResponse } from "next/server";
 
 connect();
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
   try {
-    const catagory = await Product.find({
-      parent: req.nextUrl.searchParams.get("parent"),
-    });
-    console.log(catagory);
+    const catagory = await Product.aggregate([
+      {
+        $match: {
+          parent: req.nextUrl.searchParams.get("parent"),
+        },
+      },
+      {
+        $sort: {
+          saleCount: -1,
+        },
+      },
+      {
+        $limit: 10,
+      },
+    ]);
+
     const response = NextResponse.json({
       message: "get catagory successful",
       success: true,
