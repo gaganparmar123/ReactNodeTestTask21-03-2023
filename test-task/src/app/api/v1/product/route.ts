@@ -9,7 +9,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
     const catagory = await Product.find({
       parent: req.nextUrl.searchParams.get("parent"),
     });
-    console.log(catagory);
     const response = NextResponse.json({
       message: "get catagory successful",
       success: true,

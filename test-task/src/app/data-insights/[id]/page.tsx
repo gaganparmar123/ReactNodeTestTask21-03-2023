@@ -17,11 +17,13 @@ import {
 } from "recharts";
 import { useRouter, useParams } from "next/navigation";
 import TableLayout from "../../components/TableLayout";
+import Loader from "@/app/components/Loader";
 
 export default function DataInsights() {
   const router = useRouter();
   const params = useParams();
   const [dataProductList, setDataProductList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const data = [
     { name: "1990", uv: 400, pv: 200, amt: 2400 },
     { name: "1995", uv: 200, pv: 200, amt: 2400 },
@@ -87,9 +89,11 @@ export default function DataInsights() {
     })
       .then((res) => {
         setDataProductList(res?.data);
+        setIsLoading(false)
       })
       .catch((err) => console.log("err", err));
   }, []);
+  if (isLoading) return <Loader />
   return (
     <div className="flex min-h-screen flex-col items-center p-24 py-10">
       <div className="flex justify-between w-full items-center">

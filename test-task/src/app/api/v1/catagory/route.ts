@@ -33,7 +33,6 @@ export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
     const { name, description } = reqBody;
-    console.log(reqBody);
 
     const newCategory = await Category.create({
       name,

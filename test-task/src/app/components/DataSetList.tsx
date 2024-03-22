@@ -3,30 +3,34 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getDatasets } from "@/services/Dataset.service";
-
+import Loader from "./Loader"
 const DataSetList = () => {
   const router = useRouter();
   const [datasetList, setDatasetList] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getDatasets("/catagory")
       .then((res) => {
         setDatasetList(res);
+        setIsLoading(false)
       })
       .catch((err) => console.log("err", err));
   }, []);
+
+  if (isLoading) return <Loader />
   return (
     <div className="w-full text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       <div className="flex items-center p-4 w-full">
         <div className="bg-white w-full sm:w-1/2 lg:w-196 border border-gray-200 divide-y divide-gray-200">
           {datasetList &&
-            datasetList?.data?.map((item: any) => (
+            datasetList?.data?.map((item: { _id: string, name: string, subcategories: [{ _id: string, name: string }] }) => (
               <details key={item?._id}>
                 <summary className="question py-3 px-4 cursor-pointer select-none w-full outline-none">
                   {item?.name}
                 </summary>
                 <div className="ml-10">
-                  {item?.subcategories?.map((sub: any) => (
+                  {item?.subcategories?.map((sub: { _id: string, name: string }) => (
                     <button
                       key={sub?._id}
                       type="button"
