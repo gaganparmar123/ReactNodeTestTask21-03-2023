@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
         },
       },
       {
-        $limit: 10,
+        $limit: 5,
       },
     ]);
 
