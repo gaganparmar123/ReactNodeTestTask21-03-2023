@@ -21,7 +21,7 @@ import TableLayout from "../../components/TableLayout";
 export default function DataInsights() {
   const router = useRouter();
   const params = useParams();
-  const [datasetList, setDatasetList] = useState([]);
+  const [dataProductList, setDataProductList] = useState([]);
   const data = [
     { name: "1990", uv: 400, pv: 200, amt: 2400 },
     { name: "1995", uv: 200, pv: 200, amt: 2400 },
@@ -86,7 +86,7 @@ export default function DataInsights() {
       },
     })
       .then((res) => {
-        setDatasetList(res);
+        setDataProductList(res);
       })
       .catch((err) => console.log("err", err));
   }, []);
